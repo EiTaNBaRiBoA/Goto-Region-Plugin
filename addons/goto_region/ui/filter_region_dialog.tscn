@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3 uid="uid://drcwyjc7ul2na"]
+
+[ext_resource type="Script" path="res://addons/goto_region/ui/filter_region_dialog.gd" id="1_tytk4"]
+
+[node name="FilterRegionWindow" type="Window"]
+title = "Goto region"
+position = Vector2i(0, 36)
+size = Vector2i(505, 335)
+script = ExtResource("1_tytk4")
+
+[node name="Container" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Container/Content"]
+layout_mode = 2
+text = "Search:"
+
+[node name="SearchEdit" type="LineEdit" parent="Container/Content"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Container/Content"]
+layout_mode = 2
+text = "Matchs:"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Container/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemList" type="ItemList" parent="Container/Content/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 0
+allow_search = false
+
+[node name="Preview" type="CodeEdit" parent="Container/Content/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.6
+focus_mode = 0
+editable = false
+context_menu_enabled = false
+shortcut_keys_enabled = false
+selecting_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+virtual_keyboard_enabled = false
+middle_mouse_paste_enabled = false
+
+[connection signal="close_requested" from="." to="." method="_on_close_requested"]
+[connection signal="gui_input" from="Container/Content/SearchEdit" to="." method="_on_search_edit_gui_input"]
+[connection signal="text_changed" from="Container/Content/SearchEdit" to="." method="_on_search_edit_text_changed"]
+[connection signal="text_submitted" from="Container/Content/SearchEdit" to="." method="_on_search_edit_text_submitted"]
+[connection signal="item_activated" from="Container/Content/HBoxContainer/ItemList" to="." method="_on_item_list_item_activated"]
+[connection signal="item_selected" from="Container/Content/HBoxContainer/ItemList" to="." method="_on_item_list_item_selected"]
