@@ -1,39 +1,50 @@
 @tool
 extends EditorPlugin
 
-const FILTER_REGION_DIALOG_SCENE = preload("res://addons/goto_region/ui/filter_region_dialog.tscn")
+const GOTO_REGION_DIALOG_SCENE = preload("res://addons/goto_region/ui/goto_region_dialog.tscn")
+const FIND_REGION_SHORTCUT = preload("./resources/goto_region_shortcut.tres")
 
-var button := Button.new()
-var filter_region_dialog: Window
+# Goto Region Dialog Command Name
+const COMMAND_PALETTE_GRD_COMMAND_NAME := "Goto Region"
+# Goto Region Dialog Key Name
+const COMMAND_PALETTE_GRD_KEY_NAME := "goto_region/open_menu"
 
+var goto_region_dialog: ConfirmationDialog
+
+
+#region Pluin init
 
 func _enter_tree() -> void:
-	filter_region_dialog = FILTER_REGION_DIALOG_SCENE.instantiate()
+	goto_region_dialog = GOTO_REGION_DIALOG_SCENE.instantiate()
+	goto_region_dialog.hide()
+	EditorInterface.get_script_editor().add_child(goto_region_dialog)
 
-	var script_editor := EditorInterface.get_script_editor()
-
-	var menu_hbox := script_editor.get_child(0).get_child(0)
-	menu_hbox.add_child(button)
-
-	button.text = "Regions"
-
-	button.pressed.connect(_on_region_button_pressed)
-
+	# Add a command to the command palette
+	EditorInterface.get_command_palette().add_command(
+		COMMAND_PALETTE_GRD_COMMAND_NAME, COMMAND_PALETTE_GRD_KEY_NAME,
+		open_goto_region_dialog, FIND_REGION_SHORTCUT.get_as_text()
+		)
 
 
 func _exit_tree() -> void:
-	if button:
-		button.queue_free()
+	# Remove the dialog
+	if is_instance_valid(goto_region_dialog):
+		goto_region_dialog.queue_free()
 
-	if filter_region_dialog.is_inside_tree():
-		filter_region_dialog.queue_free()
+	# Remove the command from the command palette
+	EditorInterface.get_command_palette().remove_command(COMMAND_PALETTE_GRD_KEY_NAME)
 
+#endregion
 
-func _on_region_button_pressed() -> void:
-	EditorInterface.popup_dialog(filter_region_dialog)
-
+func open_goto_region_dialog() -> void:
 	var script_editor := EditorInterface.get_script_editor()
-	var current: ScriptEditorBase = script_editor.get_current_editor()
-
+	var current := script_editor.get_current_editor()
 	if current and is_instance_of(current.get_base_editor(), CodeEdit):
-		filter_region_dialog.update_cache(current.get_base_editor())
+		if current.get_base_editor().has_focus():
+			goto_region_dialog.popup_centered(goto_region_dialog.size)
+
+
+func _shortcut_input(event: InputEvent) -> void:
+	if FIND_REGION_SHORTCUT.matches_event(event):
+		open_goto_region_dialog()
+		get_viewport().set_input_as_handled()
