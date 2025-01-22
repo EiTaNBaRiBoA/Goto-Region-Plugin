@@ -83,7 +83,8 @@ func update_list() -> void:
 	for line in cached_regions.keys():
 		var identifier: String = cached_regions[line]
 		var full_identifier := ("%s:%d" % [identifier, line + 1])
-		if full_identifier.containsn(search_edit.text) or search_edit.text.length() == 0:
+		if full_identifier.to_lower().contains(search_edit.text.to_lower()) or\
+		search_edit.text.length() == 0:
 			item_list.add_item(full_identifier)
 			item_list.set_item_metadata(item_list.item_count - 1, line)
 
