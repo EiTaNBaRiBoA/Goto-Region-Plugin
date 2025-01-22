@@ -6,7 +6,6 @@
 title = "Goto region"
 position = Vector2i(0, 36)
 size = Vector2i(505, 335)
-visible = true
 script = ExtResource("1_8x0xt")
 
 [node name="Container" type="PanelContainer" parent="."]
