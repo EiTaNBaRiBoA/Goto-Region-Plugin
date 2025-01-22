@@ -4,7 +4,7 @@
 device = -1
 alt_pressed = true
 ctrl_pressed = true
-keycode = 85
+keycode = 71
 
 [resource]
 events = [SubResource("InputEventKey_qjf3q")]
