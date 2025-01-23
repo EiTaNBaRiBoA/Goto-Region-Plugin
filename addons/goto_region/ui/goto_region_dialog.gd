@@ -92,7 +92,6 @@ func cache_code_regions() -> void:
 			cached_regions.append(current_region)
 			is_region_open = false
 
-#region hey
 
 func update_list() -> void:
 	item_list.clear()
