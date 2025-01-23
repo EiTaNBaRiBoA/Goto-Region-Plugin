@@ -98,7 +98,7 @@ func update_list() -> void:
 	for region in cached_regions:
 		var region_start: int = region["region_start"]
 		var region_end: int = region["region_end"]
-		var identifier: String = region["identifier"].to_lower()
+		var identifier: String = region["identifier"]
 
 		var full_identifier := ""
 		# This means that the region doesnt have a close tag
@@ -106,9 +106,10 @@ func update_list() -> void:
 			full_identifier = "%s : %d → ?" %[identifier, region_start + 1]
 		else:
 			full_identifier = "%s : %d → %d" %[identifier, region_start + 1, region_end + 1]
+		var lowered_full_identifier := full_identifier.to_lower()
 
 		var search_text := search_edit.text.to_lower()
-		if full_identifier.contains(search_text) or search_text.length() == 0:
+		if lowered_full_identifier.contains(search_text) or search_text.length() == 0:
 			item_list.add_item(full_identifier)
 			item_list.set_item_metadata(item_list.item_count - 1, region_start)
 
@@ -125,7 +126,7 @@ func update_preview() -> void:
 		var line: int = item_list.get_item_metadata(selected[0])
 		preview.text = ""
 		for i in range(line, clamp(line + preview_line_count, 0, cached_editor.get_line_count())):
-			preview.text += "%s\n" % cached_editor.get_line(i - 1)
+			preview.text += "%s\n" % cached_editor.get_line(i)
 	else:
 		preview.clear()
 
