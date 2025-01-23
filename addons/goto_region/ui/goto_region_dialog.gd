@@ -7,8 +7,8 @@ const ES_PREVIEW_LINE_COUNT := "text_editor/goto_region/preview_line_count"
 
 @onready var search_edit: LineEdit = $Container/Content/SearchEdit
 @onready var show_preview_check: CheckButton = $Container/Content/HBoxContainer/ShowPreviewCheck
-@onready var item_list: ItemList = $Container/Content/HBoxContainer2/ItemList
-@onready var preview: CodeEdit = $Container/Content/HBoxContainer2/Preview
+@onready var item_list: ItemList = $Container/Content/ItemListPreviewSplit/ItemList
+@onready var preview: CodeEdit = $Container/Content/ItemListPreviewSplit/Preview
 
 ## The regions of the current script editor
 var cached_regions: Array[Dictionary] = []
