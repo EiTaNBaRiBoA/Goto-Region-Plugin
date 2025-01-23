@@ -6,7 +6,7 @@ This plugin allows you to quickly browse through the regions in your Godot code,
 </p>
 
 # Installation
-Search for Goto Region Plugin in the Godot asset library or download from this repo directly.
+Search for Goto Region Plugin on the [Godot Asset Library](https://godotengine.org/asset-library/asset/3655) or download from this repo directly.
 
 # Editor Settings
 This plugin comes with 2 editor settings.
