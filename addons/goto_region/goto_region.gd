@@ -42,9 +42,6 @@ func _exit_tree() -> void:
 	EditorInterface.get_resource_filesystem().filesystem_changed.disconnect(
 		_on_resource_filesystem_changed)
 
-func _get_plugin_icon() -> Texture2D:
-	return preload("res://addons/goto_region/icon.svg")
-
 #endregion
 
 func open_goto_region_dialog() -> void:
