@@ -11,7 +11,7 @@ const ES_PREVIEW_LINE_COUNT := "text_editor/goto_region/preview_line_count"
 @onready var preview: CodeEdit = $Container/Content/HBoxContainer2/Preview
 
 ## The regions of the current script editor
-var cached_regions: Dictionary = {}
+var cached_regions: Array[Dictionary] = []
 ## The current script editor.
 var cached_editor: CodeEdit
 ## Should draw preview.
@@ -71,22 +71,47 @@ func cache_code_regions() -> void:
 		return
 
 	cached_regions.clear()
-	var code_region_start_tag := "#%s" %cached_editor.get_code_region_start_tag()
+	var code_region_start_tag := "#%s " %cached_editor.get_code_region_start_tag()
+	var current_region := {}
+	var is_region_open := false
 	for line in range(cached_editor.get_line_count()):
 		if cached_editor.is_line_code_region_start(line):
-			var identifier := cached_editor.get_line(line).lstrip(code_region_start_tag)
-			cached_regions[line] = identifier
+			if is_region_open:
+				current_region["region_end"] = -1
+				cached_regions.append(current_region)
+				is_region_open = false
 
+			current_region = {}
+			current_region["region_start"] = line
+			var identifier := cached_editor.get_line(line).lstrip(code_region_start_tag)
+			current_region["identifier"] = identifier
+			is_region_open = true
+
+		elif cached_editor.is_line_code_region_end(line) and is_region_open:
+			current_region["region_end"] = line
+			cached_regions.append(current_region)
+			is_region_open = false
+
+#region hey
 
 func update_list() -> void:
 	item_list.clear()
-	for line in cached_regions.keys():
-		var identifier: String = cached_regions[line]
-		var full_identifier := ("%s:%d" % [identifier, line + 1])
-		if full_identifier.to_lower().contains(search_edit.text.to_lower()) or\
-		search_edit.text.length() == 0:
+	for region in cached_regions:
+		var region_start: int = region["region_start"]
+		var region_end: int = region["region_end"]
+		var identifier: String = region["identifier"].to_lower()
+
+		var full_identifier := ""
+		# This means that the region doesnt have a close tag
+		if region_end < 0:
+			full_identifier = "%s : %d → ?" %[identifier, region_start + 1]
+		else:
+			full_identifier = "%s : %d → %d" %[identifier, region_start + 1, region_end + 1]
+
+		var search_text := search_edit.text.to_lower()
+		if full_identifier.contains(search_text) or search_text.length() == 0:
 			item_list.add_item(full_identifier)
-			item_list.set_item_metadata(item_list.item_count - 1, line)
+			item_list.set_item_metadata(item_list.item_count - 1, region_start)
 
 	if item_list.item_count > 0:
 		item_list.select(0)
@@ -101,7 +126,7 @@ func update_preview() -> void:
 		var line: int = item_list.get_item_metadata(selected[0])
 		preview.text = ""
 		for i in range(line, clamp(line + preview_line_count, 0, cached_editor.get_line_count())):
-			preview.text += "%s\n" % cached_editor.get_line(i)
+			preview.text += "%s\n" % cached_editor.get_line(i - 1)
 	else:
 		preview.clear()
 
