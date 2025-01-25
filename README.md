@@ -17,7 +17,7 @@ This plugin comes with 2 editor settings.
 </p>
 
 # Shortcut & Command Palette
-The default shorcut for this plugin ```Ctrl+Alt+G``` however this can be changed using the [Shortcut Resource](https://docs.godotengine.org/en/stable/classes/class_shortcut.html) at **res://addons/godot_region/resources/goto_region_shortcut.tres**.
+The default shorcut for this plugin ```Ctrl+Alt+G``` however this can be changed using the [Shortcut Resource](https://docs.godotengine.org/en/stable/classes/class_shortcut.html) at **res://addons/goto_region/resources/goto_region_shortcut.tres**.
 A command called ```Goto Region``` is added to the [Command Palette](https://docs.godotengine.org/en/stable/classes/class_editorcommandpalette.html#editorcommandpalette). 
 <p align="center">
   <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/C.png" alt="The editor settings" />
