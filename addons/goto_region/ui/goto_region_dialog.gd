@@ -1,34 +1,35 @@
 @tool
 extends ConfirmationDialog
 
-
-const ES_SHOW_PREVIEW := "text_editor/goto_region/show_preview"
-const ES_PREVIEW_LINE_COUNT := "text_editor/goto_region/preview_line_count"
+## This contains the path to the editor setting to "show the preview".
+const ES_SHOW_PREVIEW := &"text_editor/goto_region/show_preview"
+## This contains the path to the editor setting that indicates the anount of preview lines.
+const ES_PREVIEW_LINE_COUNT := &"text_editor/goto_region/preview_line_count"
 
 @onready var search_edit: LineEdit = $Container/Content/SearchEdit
 @onready var show_preview_check: CheckButton = $Container/Content/HBoxContainer/ShowPreviewCheck
 @onready var item_list: ItemList = $Container/Content/ItemListPreviewSplit/ItemList
 @onready var preview: CodeEdit = $Container/Content/ItemListPreviewSplit/Preview
 
-## The regions of the current script editor
+## The regions of the current script editor. There is no built in method to capture the regions so
+## we need to check each line.
 var cached_regions: Array[Dictionary] = []
-## The current script editor.
+## The current script editor, updates each time the window is about to popup.
 var cached_editor: CodeEdit
-## Should draw preview.
+## A local variable that match's [constant ES_SHOW_PREVIEW].
 var should_show_preview: bool:
 	set(value):
 		should_show_preview = value
 		EditorInterface.get_editor_settings().set(ES_SHOW_PREVIEW, value)
 	get:
 		return EditorInterface.get_editor_settings().get(ES_SHOW_PREVIEW)
-## Affects EditorSettings:text_editor/goto_regions/preview_line_count.
-## Determines the amount of lines to preview.
+## A local variable that match's [constant ES_PREVIEW_LINE_COUNT].
 var preview_line_count: int:
 	get:
 		return EditorInterface.get_editor_settings().get(ES_PREVIEW_LINE_COUNT)
 
 
-## Prepares this window by gathering the current script editor's regions and updating the list
+## Prepares this window by gathering the current script editor's regions and updating the list.
 # CODE_SIGNAL
 func prepare() -> void:
 	cached_editor = null
@@ -50,6 +51,7 @@ func prepare() -> void:
 	search_edit.grab_focus()
 
 
+## Gets the selected item and get's the regions start line from its metadata.
 func confirm_region() -> void:
 	var selected := item_list.get_selected_items()
 	if selected.size() == 0:
@@ -58,9 +60,6 @@ func confirm_region() -> void:
 
 	cached_editor.grab_focus()
 	EditorInterface.get_script_editor().goto_line(line)
-
-	await get_tree().process_frame
-	await get_tree().process_frame
 
 	hide()
 
@@ -93,6 +92,7 @@ func cache_code_regions() -> void:
 			is_region_open = false
 
 
+## Populates the list that diplays the regions.
 func update_list() -> void:
 	item_list.clear()
 	for region in cached_regions:
@@ -118,6 +118,7 @@ func update_list() -> void:
 		update_preview()
 
 
+## If [member should_show_preview] is [code]true[/code] then the preview is updated.
 func update_preview() -> void:
 	if not should_show_preview:
 		return
