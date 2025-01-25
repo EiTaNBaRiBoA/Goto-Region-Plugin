@@ -15,6 +15,7 @@ var goto_region_dialog: ConfirmationDialog
 #region Pluin
 
 func _enter_tree() -> void:
+
 	goto_region_dialog = GOTO_REGION_DIALOG_SCENE.instantiate()
 	goto_region_dialog.hide()
 	EditorInterface.get_script_editor().add_child(goto_region_dialog)
