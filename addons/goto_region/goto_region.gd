@@ -15,9 +15,6 @@ var goto_region_dialog: ConfirmationDialog
 #region Pluin
 
 func _enter_tree() -> void:
-	var version := get_plugin_version()
-	var shortcut_string := GOTO_REGION_SHORTCUT.get_as_text()
-	print_rich("[code]Goto Region v%s (%s)[/code]" %[version, shortcut_string])
 
 	goto_region_dialog = GOTO_REGION_DIALOG_SCENE.instantiate()
 	goto_region_dialog.hide()
