@@ -7,7 +7,7 @@ var GOTO_REGION_SHORTCUT := preload("./resources/goto_region_shortcut.tres")
 # Goto Region Dialog Command Name
 const COMMAND_PALETTE_GRD_COMMAND_NAME := "Go to region"
 # Goto Region Dialog Key Name
-const COMMAND_PALETTE_GRD_KEY_NAME := "goto_region/open_menu"
+const COMMAND_PALETTE_GRD_KEY_NAME := "go_to_region/open_menu"
 
 var goto_region_dialog: ConfirmationDialog
 
