@@ -1,8 +1,11 @@
-# The plugin
+> [!IMPORTANT]
+> To update the plugin, first remove the plugins root folder ```res://addons/goto_region``` and then follow installation steps.
+
+# The Plugin
 This plugin allows you to quickly browse through the regions in your Godot code, especially helpful for projects with a lot of code. Quickly filter through your regions and (optionally) have a preview your code.
 <p align="center">
-  <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/A.png" alt="The editor settings" />
-  <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/B.png" alt="The editor settings" />
+  <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/A.png" alt="A" />
+  <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/B.png" alt="B" />
 </p>
 
 # Installation
@@ -18,7 +21,7 @@ This plugin comes with 2 editor settings.
 
 # Shortcut & Command Palette
 The default shorcut for this plugin ```Ctrl+Alt+G``` however this can be changed using the [Shortcut Resource](https://docs.godotengine.org/en/stable/classes/class_shortcut.html) at **res://addons/goto_region/resources/goto_region_shortcut.tres**.
-A command called ```Goto Region``` is added to the [Command Palette](https://docs.godotengine.org/en/stable/classes/class_editorcommandpalette.html#editorcommandpalette). 
+A command called ```Go To Region``` is added to the [Command Palette](https://docs.godotengine.org/en/stable/classes/class_editorcommandpalette.html#editorcommandpalette). 
 <p align="center">
-  <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/C.png" alt="The editor settings" />
+  <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/C.png" alt="The Command Palette" />
 </p>
