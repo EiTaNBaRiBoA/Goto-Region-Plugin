@@ -5,7 +5,7 @@ const GOTO_REGION_DIALOG_SCENE = preload("res://addons/goto_region/ui/goto_regio
 var GOTO_REGION_SHORTCUT := preload("./resources/goto_region_shortcut.tres")
 
 # Goto Region Dialog Command Name
-const COMMAND_PALETTE_GRD_COMMAND_NAME := "Goto Region"
+const COMMAND_PALETTE_GRD_COMMAND_NAME := "Go to region"
 # Goto Region Dialog Key Name
 const COMMAND_PALETTE_GRD_KEY_NAME := "goto_region/open_menu"
 
@@ -16,7 +16,7 @@ var goto_region_dialog: ConfirmationDialog
 
 func _enter_tree() -> void:
 	var version := get_plugin_version()
-	print_rich("[code]Goto Region v%s (%s)." %[version, GOTO_REGION_SHORTCUT.get_as_text()])
+	print_rich("[code]Goto region v%s (%s)." %[version, GOTO_REGION_SHORTCUT.get_as_text()])
 
 
 	goto_region_dialog = GOTO_REGION_DIALOG_SCENE.instantiate()

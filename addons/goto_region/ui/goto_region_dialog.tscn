@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/goto_region/ui/goto_region_dialog.gd" id="1_8x0xt"]
 
 [node name="FilterRegionWindow" type="ConfirmationDialog"]
-title = "Goto region"
+title = "Go to region"
 position = Vector2i(0, 36)
 size = Vector2i(505, 435)
 visible = true
