@@ -1,5 +1,5 @@
-> [!IMPORTANT]
-> To update the plugin, first remove the plugins root folder ```res://addons/goto_region``` and then follow installation steps.
+> [!NOTE]
+> To update the plugin, first remove the plugins root folder ```res://addons/goto_region``` and then follow [installation](https://github.com/TheLsbt/Goto-Region-Plugin#installation) steps.
 
 # The Plugin
 This plugin allows you to quickly browse through the regions in your Godot code, especially helpful for projects with a lot of code. Quickly filter through your regions and (optionally) have a preview your code.
@@ -9,7 +9,7 @@ This plugin allows you to quickly browse through the regions in your Godot code,
 </p>
 
 # Installation
-Search for Goto Region Plugin on the [Godot Asset Library](https://godotengine.org/asset-library/asset/3655) or download from this repo directly.
+Search for Goto Region Plugin on the [Godot Asset Library](https://godotengine.org/asset-library/asset/3655) or from this repository.
 
 # Editor Settings
 This plugin comes with 2 editor settings.
