@@ -2,7 +2,12 @@
 extends EditorPlugin
 
 const GOTO_REGION_DIALOG_SCENE = preload("res://addons/goto_region/ui/goto_region_dialog.tscn")
-var GOTO_REGION_SHORTCUT := preload("./resources/goto_region_shortcut.tres")
+## This contains the path to the editor setting to "show the preview".
+const ES_SHOW_PREVIEW := &"text_editor/goto_region/show_preview"
+## This contains the path to the editor setting that indicates the anount of preview lines.
+const ES_PREVIEW_LINE_COUNT := &"text_editor/goto_region/preview_line_count"
+## This contains the path to the editor settings that indiacte the shortcut to open the dialog menu
+const ES_OPEN_DIALOG_SHORTCUT := &"text_editor/goto_region/open_dialog_shortcut"
 
 # Goto Region Dialog Command Name
 const COMMAND_PALETTE_GRD_COMMAND_NAME := "Go to region"
@@ -10,24 +15,32 @@ const COMMAND_PALETTE_GRD_COMMAND_NAME := "Go to region"
 const COMMAND_PALETTE_GRD_KEY_NAME := "go_to_region/open_menu"
 
 var goto_region_dialog: ConfirmationDialog
+var goto_region_shortcut: Shortcut:
+	get:
+		return EditorInterface.get_editor_settings().get(ES_OPEN_DIALOG_SHORTCUT)
 
 
 #region Pluin
 
 func _enter_tree() -> void:
-	var version := get_plugin_version()
-	print_rich("[code]Goto region v%s (%s)." %[version, GOTO_REGION_SHORTCUT.get_as_text()])
+	_add_editor_settings()
 
+	goto_region_shortcut = EditorInterface.get_editor_settings().get(ES_OPEN_DIALOG_SHORTCUT)
+
+	var version := get_plugin_version()
+	print_rich("[code]Goto region v%s (%s)." %[version, goto_region_shortcut.get_as_text()])
 
 	goto_region_dialog = GOTO_REGION_DIALOG_SCENE.instantiate()
+	goto_region_dialog.plugin = self
 	goto_region_dialog.hide()
 	EditorInterface.get_script_editor().add_child(goto_region_dialog)
 
 	# Add a command to the command palette
 	EditorInterface.get_command_palette().add_command(
 		COMMAND_PALETTE_GRD_COMMAND_NAME, COMMAND_PALETTE_GRD_KEY_NAME,
-		open_goto_region_dialog, GOTO_REGION_SHORTCUT.get_as_text()
+		open_goto_region_dialog
 		)
+
 
 
 func _exit_tree() -> void:
@@ -49,7 +62,63 @@ func open_goto_region_dialog() -> void:
 			goto_region_dialog.popup_centered(goto_region_dialog.size)
 
 
+func _add_editor_settings() -> void:
+	var settings := EditorInterface.get_editor_settings()
+	settings.settings_changed.connect(_on_editor_settings_changed)
+
+	settings.add_property_info({
+		"name": ES_SHOW_PREVIEW,
+		"type": TYPE_BOOL,
+	})
+
+	settings.add_property_info({
+		"name": ES_PREVIEW_LINE_COUNT,
+		"type": TYPE_INT,
+	})
+
+	settings.add_property_info({
+		"name": ES_OPEN_DIALOG_SHORTCUT,
+		"type": TYPE_OBJECT,
+		"hint": PROPERTY_HINT_RESOURCE_TYPE,
+		"hint_string": "Shortcut"
+	})
+
+	if not settings.has_setting(ES_SHOW_PREVIEW):
+		settings.set(ES_SHOW_PREVIEW, false)
+	settings.set_initial_value(ES_SHOW_PREVIEW, true, false)
+
+	if not settings.has_setting(ES_PREVIEW_LINE_COUNT):
+		settings.set(ES_PREVIEW_LINE_COUNT, 8)
+	settings.set_initial_value(ES_PREVIEW_LINE_COUNT, 8, false)
+
+	var default_shortcut = _get_default_open_dialog_shortcut()
+	if not settings.has_setting(ES_OPEN_DIALOG_SHORTCUT):
+		settings.set(ES_OPEN_DIALOG_SHORTCUT, default_shortcut)
+	settings.set_initial_value(ES_OPEN_DIALOG_SHORTCUT, default_shortcut, false)
+
+
+
 func _shortcut_input(event: InputEvent) -> void:
-	if GOTO_REGION_SHORTCUT.matches_event(event):
+	if goto_region_shortcut.matches_event(event):
 		open_goto_region_dialog()
 		get_viewport().set_input_as_handled()
+
+
+func _get_default_open_dialog_shortcut() -> Shortcut:
+	var shortcut := Shortcut.new()
+	var default_event := InputEventKey.new()
+	default_event.keycode = KEY_G
+	default_event.ctrl_pressed = true
+	default_event.alt_pressed = true
+	shortcut.events = [default_event]
+	return shortcut
+
+
+func _on_editor_settings_changed() -> void:
+	var settings := EditorInterface.get_editor_settings()
+	var changed := settings.get_changed_settings()
+
+	if changed.has(ES_SHOW_PREVIEW):
+		goto_region_dialog.should_show_preview = settings.get(ES_SHOW_PREVIEW)
+	elif changed.has(ES_PREVIEW_LINE_COUNT):
+		goto_region_dialog.update_preview()

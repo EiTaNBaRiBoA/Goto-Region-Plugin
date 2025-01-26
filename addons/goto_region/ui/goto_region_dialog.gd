@@ -1,32 +1,33 @@
 @tool
 extends ConfirmationDialog
 
-## This contains the path to the editor setting to "show the preview".
-const ES_SHOW_PREVIEW := &"text_editor/goto_region/show_preview"
-## This contains the path to the editor setting that indicates the anount of preview lines.
-const ES_PREVIEW_LINE_COUNT := &"text_editor/goto_region/preview_line_count"
+const PLUGIN_SCRIPT := preload("../goto_region.gd")
 
 @onready var search_edit: LineEdit = $Container/Content/SearchEdit
 @onready var show_preview_check: CheckButton = $Container/Content/HBoxContainer/ShowPreviewCheck
 @onready var item_list: ItemList = $Container/Content/ItemListPreviewSplit/ItemList
 @onready var preview: CodeEdit = $Container/Content/ItemListPreviewSplit/Preview
 
+## The plugin this window belongs to.
+var plugin: PLUGIN_SCRIPT
 ## The regions of the current script editor. There is no built in method to capture the regions so
 ## we need to check each line.
 var cached_regions: Array[Dictionary] = []
 ## The current script editor, updates each time the window is about to popup.
 var cached_editor: CodeEdit
-## A local variable that match's [constant ES_SHOW_PREVIEW].
+## A local variable that match's [constant plugin.ES_SHOW_PREVIEW].
 var should_show_preview: bool:
 	set(value):
 		should_show_preview = value
-		EditorInterface.get_editor_settings().set(ES_SHOW_PREVIEW, value)
+		show_preview_check.set_pressed_no_signal(should_show_preview)
+		preview.visible = should_show_preview
+		update_preview()
 	get:
-		return EditorInterface.get_editor_settings().get(ES_SHOW_PREVIEW)
-## A local variable that match's [constant ES_PREVIEW_LINE_COUNT].
+		return EditorInterface.get_editor_settings().get(plugin.ES_SHOW_PREVIEW)
+## A local variable that match's [constant plugin.ES_PREVIEW_LINE_COUNT].
 var preview_line_count: int:
 	get:
-		return EditorInterface.get_editor_settings().get(ES_PREVIEW_LINE_COUNT)
+		return EditorInterface.get_editor_settings().get(plugin.ES_PREVIEW_LINE_COUNT)
 
 
 ## Prepares this window by gathering the current script editor's regions and updating the list.
@@ -44,10 +45,11 @@ func prepare() -> void:
 
 	preview.clear()
 	search_edit.clear()
+	var editor_settings := EditorInterface.get_editor_settings()
+	should_show_preview = editor_settings.get(plugin.ES_SHOW_PREVIEW)
+
 	update_list()
 
-	await get_tree().process_frame
-	await get_tree().process_frame
 	search_edit.grab_focus()
 
 
@@ -136,44 +138,8 @@ func _init() -> void:
 	about_to_popup.connect(prepare)
 	confirmed.connect(_on_confirmed)
 
-	var settings := EditorInterface.get_editor_settings()
-	settings.settings_changed.connect(_on_editor_settings_changed)
-
-	settings.add_property_info({
-		"name": ES_SHOW_PREVIEW,
-		"type": TYPE_BOOL,
-	})
-
-	settings.add_property_info({
-		"name": ES_PREVIEW_LINE_COUNT,
-		"type": TYPE_INT,
-	})
-
-	if not settings.has_setting(ES_SHOW_PREVIEW):
-		settings.set(ES_SHOW_PREVIEW, false)
-		settings.set_initial_value(ES_SHOW_PREVIEW, true, true)
-
-	if not settings.has_setting(ES_PREVIEW_LINE_COUNT):
-		settings.set(ES_PREVIEW_LINE_COUNT, 8)
-		settings.set_initial_value(ES_PREVIEW_LINE_COUNT, 8, true)
-
 
 #region Signals
-
-# CODE_SIGNAL
-func _on_editor_settings_changed() -> void:
-	var settings := EditorInterface.get_editor_settings()
-	var changed := settings.get_changed_settings()
-
-	if changed.has(ES_SHOW_PREVIEW):
-		should_show_preview = settings.get(ES_SHOW_PREVIEW)
-		show_preview_check.set_pressed_no_signal(should_show_preview)
-		preview.visible = should_show_preview
-		update_preview()
-	elif changed.has(ES_PREVIEW_LINE_COUNT):
-		should_show_preview = settings.get(ES_PREVIEW_LINE_COUNT)
-		update_preview()
-
 
 # CODE_SIGNAL
 func _on_confirmed() -> void:
@@ -216,6 +182,6 @@ func _on_item_list_item_selected(_index: int) -> void:
 
 
 func _on_show_preview_check_toggled(toggled: bool) -> void:
-	should_show_preview = toggled
+	EditorInterface.get_editor_settings().set(plugin.ES_SHOW_PREVIEW, toggled)
 
 #endregion
