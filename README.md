@@ -1,5 +1,5 @@
-> [!NOTE]
-> To update the plugin, first remove the plugins root folder ```res://addons/goto_region``` and then follow [installation](https://github.com/TheLsbt/Goto-Region-Plugin#installation) steps.
+> [!IMPORTANT]
+> Usable from Godot 4.2 and onward.
 
 # The Plugin
 This plugin allows you to quickly browse through the regions in your Godot code, especially helpful for projects with a lot of code. Quickly filter through your regions and (optionally) have a preview your code.
@@ -9,18 +9,20 @@ This plugin allows you to quickly browse through the regions in your Godot code,
 </p>
 
 # Installation
-Search for Goto Region Plugin on the [Godot Asset Library](https://godotengine.org/asset-library/asset/3655) or from this repository.
+Search for [Goto Region](https://godotengine.org/asset-library/asset/3655) on the Godot Asset Library or get the latest release from this repository.
+> [!NOTE]
+> To update the plugin, first remove the plugin's root folder ```res://addons/goto_region``` and then follow the [installation steps](https://github.com/TheLsbt/Goto-Region-Plugin#installation).
 
 # Editor Settings
 This plugin comes with 2 editor settings.
 1. **Show preview**, which can be found at **text_editor/goto_region/show_preview**. *There is also a convienent check button right above the preview in the dialog*.
 2. **Preview line count**, which can be found at **text_editor/goto_region/preview_line_count**. This determines the ammount of lines that get shown in the preview.
+3. **Open dialog shortcut**, which can be found at **text_editor/goto_region/open_dialog_shortcut**. The default for this shortcut is ```Ctrl+Alt+G```.
 <p align="center">
   <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/D.png" alt="The editor settings" />
 </p>
 
-# Shortcut & Command Palette
-The default shorcut for this plugin ```Ctrl+Alt+G``` however this can be changed using the [Shortcut Resource](https://docs.godotengine.org/en/stable/classes/class_shortcut.html) at **res://addons/goto_region/resources/goto_region_shortcut.tres**.
+# Command Palette
 A command called ```Go To Region``` is added to the [Command Palette](https://docs.godotengine.org/en/stable/classes/class_editorcommandpalette.html#editorcommandpalette). 
 <p align="center">
   <img src="https://github.com/TheLsbt/Goto-Region-Plugin/blob/main/assets/C.png" alt="The Command Palette" />
