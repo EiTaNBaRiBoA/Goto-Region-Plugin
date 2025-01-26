@@ -74,6 +74,8 @@ func _add_editor_settings() -> void:
 	settings.add_property_info({
 		"name": ES_PREVIEW_LINE_COUNT,
 		"type": TYPE_INT,
+		"hint": PROPERTY_HINT_RANGE,
+		"hint_string": "0,100,1,or_greater"
 	})
 
 	settings.add_property_info({
